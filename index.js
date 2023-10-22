@@ -3,6 +3,7 @@ import reduceDOM from "./services/reduceDOMService.js";
 import { PORT } from "./utils/env-variables.js";
 
 const app = express();
+app.use(express.json());
 
 // Endpoint to get server status
 app.get("/", (req, res) => {
@@ -10,7 +11,7 @@ app.get("/", (req, res) => {
 });
 
 // Endpoint to reduce HTML DOM
-app.get("/reducer", reduceDOM);
+app.post("/reducer", reduceDOM);
 
 app.listen(PORT, () => {
   console.log(`Server Ready At PORT: ${PORT}`);

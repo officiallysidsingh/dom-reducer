@@ -1,8 +1,9 @@
 import puppeteer from "puppeteer";
 
-const url = "https://github.com/kaavee315";
+const reduceDOM = async (req, res) => {
+  // Getting url from request body
+  const { url } = req.body;
 
-const reduceDOM = async () => {
   // Launch puppeteer browser instance
   const browser = await puppeteer.launch({ headless: "new" });
 
@@ -12,14 +13,14 @@ const reduceDOM = async () => {
   // Navigate page to URL
   await page.goto(url);
 
-  // Perform HTML DOM Manipulations
-  const reducedDOM = await page.evaluate(() => {
+  // Perform Manipulations On Profile Container
+  const profileDOM = await page.evaluate(() => {
     // Getting the profile data
     const profileData = document.querySelector(
       "div.js-profile-editable-replace",
     );
 
-    // Getting important profile data
+    // Important Profile Data
     const profileImage = profileData.querySelector("img.avatar-user").src;
     const fullname = profileData.querySelector("span.p-name").innerText;
     const username = profileData.querySelector("span.p-nickname").innerText;
@@ -27,7 +28,7 @@ const reduceDOM = async () => {
     return { profileImage, fullname, username };
   });
 
-  console.log(reducedDOM);
+  console.log(profileDOM);
 
   // Close the browser instance with all associated pages
   await browser.close();
