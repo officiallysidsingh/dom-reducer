@@ -1,10 +1,8 @@
 import express from "express";
 import reduceDOM from "./services/reduceDOMService.js";
-import dotenv from "dotenv";
+import { PORT } from "./utils/env-variables.js";
 
 const app = express();
-dotenv.config();
-const PORT = process.env.PORT || 5000;
 
 // Endpoint to get server status
 app.get("/", (req, res) => {
