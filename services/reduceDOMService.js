@@ -45,7 +45,28 @@ const reduceDOM = async (req, res) => {
     });
   });
 
-  console.log(pinnedRepoContainer);
+  // Perform Manipulations On Contributions Container
+  const contributionsContainer = await page.evaluate(() => {
+    // Getting the contribution data
+    const contributionData = document.querySelector(
+      "div.js-yearly-contributions",
+    );
+
+    // Important Contribution Data
+    const currYrContri = contributionData.querySelector("h2").innerText;
+    const orgsContainer = contributionData.querySelectorAll(
+      "div.js-org-filter-links-container > nav > a",
+    );
+
+    const orgsContributedTo = Array.from(orgsContainer).map((item) => {
+      const orgName = item.innerText;
+      return orgName;
+    });
+
+    return { currYrContri, orgsContributedTo };
+  });
+
+  console.log(contributionsContainer);
 
   // Close the browser instance with all associated pages
   await browser.close();
