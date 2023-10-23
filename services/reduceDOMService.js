@@ -14,13 +14,13 @@ const reduceDOM = async (req, res) => {
   await page.goto(url);
 
   // Perform Manipulations On Profile Container
-  const profileDOM = await page.evaluate(() => {
+  const profileContainer = await page.evaluate(() => {
     // Getting the profile data
     const profileData = document.querySelector(
       "div.js-profile-editable-replace",
     );
 
-    // Important Profile Data
+    // Important profile data
     const profileImage = profileData.querySelector("img.avatar-user").src;
     const fullname = profileData.querySelector("span.p-name").innerText;
     const username = profileData.querySelector("span.p-nickname").innerText;
@@ -28,7 +28,7 @@ const reduceDOM = async (req, res) => {
     return { profileImage, fullname, username };
   });
 
-  console.log(profileDOM);
+  console.log(profileContainer);
 
   // Close the browser instance with all associated pages
   await browser.close();
