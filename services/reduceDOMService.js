@@ -28,6 +28,17 @@ const reduceDOM = async (req, res) => {
     return { profileImage, fullname, username };
   });
 
+  // Making DOM For Reduced Profile Data
+  const reducedProfile = `
+    <div aria-label="Profile Card">
+      <img src="${profileContainer.profileImage}" aria-label="Profile Image">
+      <div aria-label="Profile Information">
+        <h2 aria-label="Full Name">${profileContainer.fullname}</h2>
+        <h2 aria-label="UserName">${profileContainer.username}</h2>
+      </div>
+    </div>
+  `;
+
   // Perform Manipulations On Pinned Repositories Container
   const pinnedRepoContainer = await page.evaluate(() => {
     // Getting the pinned repositories data
@@ -44,6 +55,21 @@ const reduceDOM = async (req, res) => {
       return { repoTitle, repoDesc };
     });
   });
+
+  // Making DOM For Reduced Pinned Repository Data
+  const reducedPinnedRepo = `
+    <div aria-label="Pinned Repositories">
+        <ul aria-label="List Of Pinned Repositories">
+          ${pinnedRepoContainer.map(
+            (item) =>
+              `<li>
+              <h2 aria-label="Repository Title">${item.repoTitle}</h2>
+              <p aria-label="Repository Description">${item.repoDesc}</p>
+            </li>`,
+          )}
+        </ul>
+    </div>
+  `;
 
   // Perform Manipulations On Contributions Container
   const contributionsContainer = await page.evaluate(() => {
@@ -66,7 +92,34 @@ const reduceDOM = async (req, res) => {
     return { currYrContri, orgsContributedTo };
   });
 
-  console.log(contributionsContainer);
+  // Making DOM For Reduced Contributions Data
+  const reducedContribution = `
+    <div aria-label="Contributions">
+      <h2 aria-label="Current Year Contributions">${
+        contributionsContainer.currYrContri
+      }</h2>
+      <ul aria-label="Organisations Contributed To">
+        ${contributionsContainer.orgsContributedTo.map(
+          (item) =>
+            `<li>
+            <h2 aria-label="Organisation Name">${item}</h2>
+          </li>`,
+        )}
+      </ul>
+    </div>
+  `;
+
+  // Reduced DOM
+  const reducedDOM = `
+    <div aria-label="Page Container">
+      ${reducedProfile}
+      ${reducedPinnedRepo}
+      ${reducedContribution}
+    </div>
+  `;
+
+  // Send New DOM
+  res.send(reducedDOM);
 
   // Close the browser instance with all associated pages
   await browser.close();
