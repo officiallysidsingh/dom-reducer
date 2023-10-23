@@ -28,7 +28,24 @@ const reduceDOM = async (req, res) => {
     return { profileImage, fullname, username };
   });
 
-  console.log(profileContainer);
+  // Perform Manipulations On Pinned Repositories Container
+  const pinnedRepoContainer = await page.evaluate(() => {
+    // Getting the pinned repositories data
+    const pinnedRepoData = document.querySelectorAll(
+      "div.js-pinned-items-reorder-container > ol > li",
+    );
+
+    // Mapping over repositories array
+    return Array.from(pinnedRepoData).map((item) => {
+      // Important pinned repository data
+      const repoTitle = item.querySelector("span.repo").innerText;
+      const repoDesc = item.querySelector("p.pinned-item-desc").innerText;
+
+      return { repoTitle, repoDesc };
+    });
+  });
+
+  console.log(pinnedRepoContainer);
 
   // Close the browser instance with all associated pages
   await browser.close();
